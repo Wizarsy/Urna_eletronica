@@ -2,13 +2,13 @@ from graphics import *
 import time
 
 win=GraphWin('Urna',950,596)
-urna=Image(Point(475,298),'lib/urna_eletronica.png').draw(win)
+urna=Image(Point(475,298),'Python/Urna_eletronica/lib/urna_eletronica.png').draw(win)
 tela=Rectangle(Point(38,212),Point(587,533)).draw(win)
 tela.setFill('white')
 
 def numkey(click):
   if click.getX() in range(671,723) and click.getY() in range(272,312):
-    num_down=Image(Point(695,292),'lib/button/n1_down.png').draw(win)
+    num_down=Image(Point(695,292),'Python/Urna_eletronica/lib/button/n1_down.png').draw(win)
     # x=Rectangle(Point(671,272),Point(723,312)).draw(win)
     # print(x.getCenter())
     print('1')
@@ -54,7 +54,7 @@ def numkey(click):
 # Image(Point(695,292),'lib/button/confirma_down.png').draw(win)
 while True:
   numkey(win.getMouse())
-  print(win.getMouse())
+  # print(win.getMouse())
 
 
 
