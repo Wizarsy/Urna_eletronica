@@ -1,10 +1,14 @@
 from graphics import *
 import time
+from pygame import mixer
 
+# mixer.init()
+# mixer.music.load("Python/Urna_eletronica/lib/inter.mp3")
+# mixer.music.play()
 win=GraphWin('Urna',950,596)
 urna=Image(Point(475,298),'Python/Urna_eletronica/lib/urna_eletronica.png').draw(win)
-tela=Rectangle(Point(38,212),Point(587,533)).draw(win)
-tela.setFill('white')
+# tela=Rectangle(Point(38,212),Point(587,533)).draw(win)
+# tela.setFill('white')
 
 def numkey(click):
   if click.getX() in range(670,722) and click.getY() in range(272,312):
@@ -72,38 +76,23 @@ def numkey(click):
     time.sleep(0.09)
     num_down.undraw()
   elif click.getX() in range(822,890) and click.getY() in range(490,540):
-    num_down=Image(Point(860,519),'Python/Urna_eletronica/lib/button/confirma_down.png').draw(win)
+    num_down=Image(Point(859,519),'Python/Urna_eletronica/lib/button/confirma_down.png').draw(win)
     print('Confirma')
     time.sleep(0.09)
     num_down.undraw()
-    
-# Image(Point(695,292),'lib/button/n1_down.png').draw(win)
-# Image(Point(695,292),'lib/button/n2_down.png').draw(win)
-# Image(Point(695,292),'lib/button/n3_down.png').draw(win)
-# Image(Point(695,292),'lib/button/n4_down.png').draw(win)
-# Image(Point(695,292),'lib/button/n5_down.png').draw(win)
-# Image(Point(695,292),'lib/button/n6_down.png').draw(win)
-# Image(Point(695,292),'lib/button/n7_down.png').draw(win)
-# Image(Point(695,292),'lib/button/n8_down.png').draw(win)
-# Image(Point(695,292),'lib/button/n9_down.png').draw(win)
-# Image(Point(695,292),'lib/button/n0_down.png').draw(win)
-# Image(Point(695,292),'lib/button/branco_down.png').draw(win)
-# Image(Point(695,292),'lib/button/corrige_down.png').draw(win)
-# Image(Point(695,292),'lib/button/confirma_down.png').draw(win)
+
 while True:
   numkey(win.getMouse())
-  # print(win.getMouse())
-
 
 
 
 '''
-- colocar hora e data;
-- msg de voto nulo;
-- msg de voto em branco;
-- msg de gravando;
-- msg fim no final;
-- pressionar dos botões;
+- colocar hora e data ();
+- msg de voto nulo ();
+- msg de voto em branco ();
+- msg de gravando ();
+- msg fim no final ();
+- pressionar dos botões (feito);
 
 - deputado(a) federal = 4 digitos
 - deputado(a) estudal = 5 digitos
