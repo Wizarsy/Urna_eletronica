@@ -2,9 +2,8 @@ from graphics import *
 import time
 from pygame import mixer
 
-# mixer.init()
-# mixer.music.load("Python/Urna_eletronica/lib/inter.mp3")
-# mixer.music.play()
+mixer.init()
+mixer.music.load("Python/Urna_eletronica/lib/inter.mp3")
 win=GraphWin('Urna',950,596)
 urna=Image(Point(475,298),'Python/Urna_eletronica/lib/urna_eletronica.png').draw(win)
 # tela=Rectangle(Point(38,212),Point(587,533)).draw(win)
@@ -83,6 +82,7 @@ def numkey(click):
 
 while True:
   numkey(win.getMouse())
+  mixer.music.play()
 
 
 
