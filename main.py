@@ -7,37 +7,75 @@ tela=Rectangle(Point(38,212),Point(587,533)).draw(win)
 tela.setFill('white')
 
 def numkey(click):
-  if click.getX() in range(671,723) and click.getY() in range(272,312):
+  if click.getX() in range(670,722) and click.getY() in range(272,312):
     num_down=Image(Point(695,292),'Python/Urna_eletronica/lib/button/n1_down.png').draw(win)
-    # x=Rectangle(Point(671,272),Point(723,312)).draw(win)
-    # print(x.getCenter())
     print('1')
     time.sleep(0.09)
     num_down.undraw()
-  elif click.getX() in range(742,790) and click.getY() in range(273,312):
+  elif click.getX() in range(742,790) and click.getY() in range(272,312):
+    num_down=Image(Point(766,292),'Python/Urna_eletronica/lib/button/n2_down.png').draw(win)
     print('2')
-  elif click.getX() in range(811,859) and click.getY() in range(272,312):
+    time.sleep(0.09)
+    num_down.undraw()
+  elif click.getX() in range(810,860) and click.getY() in range(272,312):
+    num_down=Image(Point(835,292),'Python/Urna_eletronica/lib/button/n3_down.png').draw(win)
     print('3')
-  elif click.getX() in range(673,722) and click.getY() in range(332,371):
+    time.sleep(0.09)
+    num_down.undraw()
+
+  elif click.getX() in range(670,722) and click.getY() in range(330,370):
+    num_down=Image(Point(695,352),'Python/Urna_eletronica/lib/button/n4_down.png').draw(win)
     print('4')
-  elif click.getX() in range(743,791) and click.getY() in range(330,370):
+    time.sleep(0.09)
+    num_down.undraw()
+  elif click.getX() in range(742,790) and click.getY() in range(330,370):
+    num_down=Image(Point(766,352),'Python/Urna_eletronica/lib/button/n5_down.png').draw(win)
     print('5')
-  elif click.getX() in range(810,861) and click.getY() in range(330,370):
+    time.sleep(0.09)
+    num_down.undraw()
+  elif click.getX() in range(810,860) and click.getY() in range(330,370):
+    num_down=Image(Point(835,352),'Python/Urna_eletronica/lib/button/n6_down.png').draw(win)
     print('6')
-  elif click.getX() in range(674,722) and click.getY() in range(392,431):
+    time.sleep(0.09)
+    num_down.undraw()
+
+  elif click.getX() in range(670,722) and click.getY() in range(390,430):
+    num_down=Image(Point(696,411),'Python/Urna_eletronica/lib/button/n7_down.png').draw(win)
     print('7')
-  elif click.getX() in range(743,791) and click.getY() in range(392,427):
+    time.sleep(0.09)
+    num_down.undraw()
+  elif click.getX() in range(742,790) and click.getY() in range(390,430):
+    num_down=Image(Point(765.5,411),'Python/Urna_eletronica/lib/button/n8_down.png').draw(win)
     print('8')
-  elif click.getX() in range(810,858) and click.getY() in range(391,428):
+    time.sleep(0.09)
+    num_down.undraw()
+  elif click.getX() in range(810,860) and click.getY() in range(390,430):
+    num_down=Image(Point(834,411),'Python/Urna_eletronica/lib/button/n9_down.png').draw(win)
     print('9')
-  elif click.getX() in range(743,793) and click.getY() in range(444,488):
+    time.sleep(0.09)
+    num_down.undraw()
+
+  elif click.getX() in range(742,790) and click.getY() in range(444,488):
+    num_down=Image(Point(773,466),'Python/Urna_eletronica/lib/button/n0_down.png').draw(win)
     print('0')
-  elif click.getX() in range(642,712) and click.getY() in range(502,538):
+    time.sleep(0.09)
+    num_down.undraw()
+
+  elif click.getX() in range(642,712) and click.getY() in range(502,540):
+    num_down=Image(Point(677,521),'Python/Urna_eletronica/lib/button/branco_down.png').draw(win)
     print('Branco')
-  elif click.getX() in range(732,800) and click.getY() in range(502,539):
+    time.sleep(0.09)
+    num_down.undraw()
+  elif click.getX() in range(732,800) and click.getY() in range(502,540):
+    num_down=Image(Point(766,521),'Python/Urna_eletronica/lib/button/corrige_down.png').draw(win)
     print('Corrige')
-  elif click.getX() in range(822,891) and click.getY() in range(491,538):
+    time.sleep(0.09)
+    num_down.undraw()
+  elif click.getX() in range(822,890) and click.getY() in range(490,540):
+    num_down=Image(Point(860,519),'Python/Urna_eletronica/lib/button/confirma_down.png').draw(win)
     print('Confirma')
+    time.sleep(0.09)
+    num_down.undraw()
     
 # Image(Point(695,292),'lib/button/n1_down.png').draw(win)
 # Image(Point(695,292),'lib/button/n2_down.png').draw(win)
