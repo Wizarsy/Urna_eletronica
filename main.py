@@ -9,7 +9,7 @@ urna=Image(Point(475,298),'Python/Urna_eletronica/lib/urna_eletronica.png').draw
 # tela=Rectangle(Point(38,212),Point(587,533)).draw(win)
 # tela.setFill('white')
 
-def numkey(click):
+def getKey(click):
   if click.getX() in range(670,722) and click.getY() in range(272,312):
     num_down=Image(Point(695,292),'Python/Urna_eletronica/lib/button/n1_down.png').draw(win)
     print('1')
@@ -81,7 +81,7 @@ def numkey(click):
     num_down.undraw()
 
 while True:
-  numkey(win.getMouse())
+  getKey(win.getMouse())
   mixer.music.play()
 
 
