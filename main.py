@@ -85,7 +85,6 @@ while True:
   mixer.music.play()
 
 
-
 '''
 - colocar hora e data ();
 - msg de voto nulo ();
