@@ -1,16 +1,15 @@
 #coding=UTF-8
 from graphics import *
+from pygame import mixer
 import datetime
 import time
-from pygame import mixer
 
 '''//////////GLOBAL///////////////////////////////////////////////////////////////////////////////////////////////////////////'''
-win=GraphWin('Urna', 950, 596)
+win=GraphWin('Urna Eletrônica', 950, 596)
 urna=Image(Point(475, 298),'Python/Urna_eletronica/lib/urna_eletronica.png').draw(win)
 mixer.init()
-
-# cargo_label = Text(Point(224, 282), 'Deputado Federal').draw(win).setSize(19)
-# cargo_num = Rectangle(Point(114, 333), Point(141, 365)).draw(win)
+draws = []
+voto = ''
 
 '''//////////FUNCTIONS////////////////////////////////////////////////////////////////////////////////////////////////////////'''
 def getCandidatos():
@@ -22,80 +21,82 @@ def getCandidatos():
     cand_list.append(candidatos.split(';'))
   return cand_list
   
-def searchCandidato(candidato, numero):
-  for linha in range(len(candidato)):
-    for coluna in range(len(candidato[linha])):
-      if numero in candidato[linha][coluna]:
-        print(candidato[linha][coluna + 3])
+def searchCandidato(matrix, numero):
+  for linha in range(len(matrix)):
+    for coluna in range(len(matrix[linha])):
+      if numero in matrix[linha][coluna]:
+        if numero <= 2:
+          print(matrix[linha][coluna + 3])
+          return True
       else:
-        print('invalido')
+        return False
 
 def getKey(click):
-  if click.getX() in range(670,722) and click.getY() in range(272,312):
-    num_down=Image(Point(695,292),'Python/Urna_eletronica/lib/button/n1_down.png').draw(win)
-    print('1')
-    time.sleep(0.09)
+  if click.getX() in range(670, 722) and click.getY() in range(272, 312):
+    num_down = Image(Point(695, 292),'Python/Urna_eletronica/lib/button/n1_down.png').draw(win)
+    time.sleep(0.10)
     num_down.undraw()
-  elif click.getX() in range(742,790) and click.getY() in range(272,312):
-    num_down=Image(Point(766,292),'Python/Urna_eletronica/lib/button/n2_down.png').draw(win)
-    print('2')
-    time.sleep(0.09)
+    return '1'
+  elif click.getX() in range(742, 790) and click.getY() in range(272, 312):
+    num_down = Image(Point(766, 292),'Python/Urna_eletronica/lib/button/n2_down.png').draw(win)
+    time.sleep(0.10)
     num_down.undraw()
-  elif click.getX() in range(810,860) and click.getY() in range(272,312):
-    num_down=Image(Point(835,292),'Python/Urna_eletronica/lib/button/n3_down.png').draw(win)
-    print('3')
-    time.sleep(0.09)
+    return '2'
+  elif click.getX() in range(810, 860) and click.getY() in range(272, 312):
+    num_down = Image(Point(835, 292),'Python/Urna_eletronica/lib/button/n3_down.png').draw(win)
+    time.sleep(0.10)
     num_down.undraw()
-  elif click.getX() in range(670,722) and click.getY() in range(330,370):
-    num_down=Image(Point(695,352),'Python/Urna_eletronica/lib/button/n4_down.png').draw(win)
-    print('4')
-    time.sleep(0.09)
+    return '3'
+  elif click.getX() in range(670, 722) and click.getY() in range(330, 370):
+    num_down = Image(Point(695, 352),'Python/Urna_eletronica/lib/button/n4_down.png').draw(win)
+    time.sleep(0.10)
     num_down.undraw()
-  elif click.getX() in range(742,790) and click.getY() in range(330,370):
-    num_down=Image(Point(766,352),'Python/Urna_eletronica/lib/button/n5_down.png').draw(win)
-    print('5')
-    time.sleep(0.09)
+    return '4'
+  elif click.getX() in range(742, 790) and click.getY() in range(330, 370):
+    num_down = Image(Point(766, 352),'Python/Urna_eletronica/lib/button/n5_down.png').draw(win)
+    time.sleep(0.10)
     num_down.undraw()
-  elif click.getX() in range(810,860) and click.getY() in range(330,370):
-    num_down=Image(Point(835,352),'Python/Urna_eletronica/lib/button/n6_down.png').draw(win)
-    print('6')
-    time.sleep(0.09)
+    return '5'
+  elif click.getX() in range(810, 860) and click.getY() in range(330, 370):
+    num_down = Image(Point(835, 352),'Python/Urna_eletronica/lib/button/n6_down.png').draw(win)
+    time.sleep(0.10)
     num_down.undraw()
-  elif click.getX() in range(670,722) and click.getY() in range(390,430):
-    num_down=Image(Point(696,411),'Python/Urna_eletronica/lib/button/n7_down.png').draw(win)
-    print('7')
-    time.sleep(0.09)
+    return '6'
+  elif click.getX() in range(670, 722) and click.getY() in range(390, 430):
+    num_down = Image(Point(696, 411),'Python/Urna_eletronica/lib/button/n7_down.png').draw(win)
+    time.sleep(0.10)
     num_down.undraw()
-  elif click.getX() in range(742,790) and click.getY() in range(390,430):
-    num_down=Image(Point(765.5,411),'Python/Urna_eletronica/lib/button/n8_down.png').draw(win)
-    print('8')
-    time.sleep(0.09)
+    return '7'
+  elif click.getX() in range(742, 790) and click.getY() in range(390, 430):
+    num_down = Image(Point(765.5, 411),'Python/Urna_eletronica/lib/button/n8_down.png').draw(win)
+    time.sleep(0.10)
     num_down.undraw()
-  elif click.getX() in range(810,860) and click.getY() in range(390,430):
-    num_down=Image(Point(834,411),'Python/Urna_eletronica/lib/button/n9_down.png').draw(win)
-    print('9')
-    time.sleep(0.09)
+    return '8'
+  elif click.getX() in range(810, 860) and click.getY() in range(390, 430):
+    num_down = Image(Point(834, 411),'Python/Urna_eletronica/lib/button/n9_down.png').draw(win)
+    time.sleep(0.10)
     num_down.undraw()
-  elif click.getX() in range(742,790) and click.getY() in range(444,488):
-    num_down=Image(Point(773,466),'Python/Urna_eletronica/lib/button/n0_down.png').draw(win)
-    print('0')
-    time.sleep(0.09)
+    return '9'
+  elif click.getX() in range(742, 790) and click.getY() in range(444, 488):
+    num_down = Image(Point(773,466),'Python/Urna_eletronica/lib/button/n0_down.png').draw(win)
+    time.sleep(0.10)
     num_down.undraw()
-  elif click.getX() in range(642,712) and click.getY() in range(502,540):
-    num_down=Image(Point(677,521),'Python/Urna_eletronica/lib/button/branco_down.png').draw(win)
-    print('Branco')
-    time.sleep(0.09)
+    return '0'
+  elif click.getX() in range(642, 712) and click.getY() in range(502, 540):
+    num_down = Image(Point(677, 521),'Python/Urna_eletronica/lib/button/branco_down.png').draw(win)
+    time.sleep(0.10)
     num_down.undraw()
-  elif click.getX() in range(732,800) and click.getY() in range(502,540):
-    num_down=Image(Point(766,521),'Python/Urna_eletronica/lib/button/corrige_down.png').draw(win)
-    print('Corrige')
-    time.sleep(0.09)
+    return 'Branco'
+  elif click.getX() in range(732, 800) and click.getY() in range(502, 540):
+    num_down = Image(Point(766, 521),'Python/Urna_eletronica/lib/button/corrige_down.png').draw(win)
+    time.sleep(0.10)
     num_down.undraw()
-  elif click.getX() in range(822,890) and click.getY() in range(490,540):
-    num_down=Image(Point(859,519),'Python/Urna_eletronica/lib/button/confirma_down.png').draw(win)
-    print('Confirma')
-    time.sleep(0.09)
+    return 'Corrige'
+  elif click.getX() in range(822, 890) and click.getY() in range(490, 540):
+    num_down = Image(Point(859, 519),'Python/Urna_eletronica/lib/button/confirma_down.png').draw(win)
+    time.sleep(0.10)
     num_down.undraw()
+    return 'Confirma'
 
 def confirmaSound():
   sound = mixer.Sound('Python/Urna_eletronica/lib/inter.wav')
@@ -115,15 +116,22 @@ def cargoNum(leng):
     
 def cargoLabel(candidatos):
   cargo_label = Text(Point(224, 282), f'{candidatos[0][1]}').draw(win).setSize(19)
-  return cargo_label
+
+def nuloMsg():
+    return 0
+
+def legendaMsg():
+    return 0
 
 '''//////////MAIN/////////////////////////////////////////////////////////////////////////////////////////////////////////////'''
+candidatos_matrix = getCandidatos()
 while True:
-  getKey(win.getMouse())
-  candidatos_matrix = getCandidatos()
-  print(candidatos_matrix)
-  cargoLabel(candidatos_matrix)
-  searchCandidato(candidatos_matrix, '9104')
+  voto += str(getKey(win.getMouse()))
+  if len(voto) >= 2:
+    if searchCandidato(candidatos_matrix, voto) == False:
+      nuloMsg()
+  if 'Corrige' in voto:
+    voto = ''
   
   
   
