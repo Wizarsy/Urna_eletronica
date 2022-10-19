@@ -5,8 +5,9 @@ import datetime
 import time
 
 '''//////////GLOBAL///////////////////////////////////////////////////////////////////////////////////////////////////////////'''
-win=GraphWin('Urna Eletrônica', 950, 596)
-urna=Image(Point(475, 298),'Python/Urna_eletronica/lib/urna_eletronica.png').draw(win)
+win = GraphWin('Urna Eletrônica', 950, 596)
+urna = Image(Point(475, 298), 'Python/Urna_eletronica/lib/urna_eletronica.png').draw(win)
+default = [[4, 'Deputado Federal'],[5, 'Deputado Estadual'], [3, 'Senador'], [2, 'Governador'], [2, 'Presidente']]
 mixer.init()
 draws = []
 voto = ''
@@ -25,13 +26,14 @@ def searchCandidato(matrix, numero):
   for linha in range(len(matrix)):
     for coluna in range(len(matrix[linha])):
       if numero in matrix[linha][coluna]:
-        if numero <= 2:
-          print(matrix[linha][coluna + 3])
+        if len(numero) == 2:
           return True
+        elif len(numero) == 4:
+          return linha
       else:
         return False
 
-def getKey(click):
+def getNum(click):
   if click.getX() in range(670, 722) and click.getY() in range(272, 312):
     num_down = Image(Point(695, 292),'Python/Urna_eletronica/lib/button/n1_down.png').draw(win)
     time.sleep(0.10)
@@ -82,7 +84,11 @@ def getKey(click):
     time.sleep(0.10)
     num_down.undraw()
     return '0'
-  elif click.getX() in range(642, 712) and click.getY() in range(502, 540):
+  else:
+    pass
+
+def getAction(click):
+  if click.getX() in range(642, 712) and click.getY() in range(502, 540):
     num_down = Image(Point(677, 521),'Python/Urna_eletronica/lib/button/branco_down.png').draw(win)
     time.sleep(0.10)
     num_down.undraw()
@@ -113,28 +119,50 @@ def cargoNum(leng):
     cargo_num = Rectangle(Point(initX, 333), Point(initX1, 365)).draw(win)
     initX = initX1 + 2
     initX1 += 29
+    draws.append(cargo_num)
     
-def cargoLabel(candidatos):
-  cargo_label = Text(Point(224, 282), f'{candidatos[0][1]}').draw(win).setSize(19)
+def cargoLabel(candidatos, index):
+  cargo_label = Text(Point(224, 282), f'{candidatos[index][1]}').draw(win).setSize(19)
+  draws.append(cargo_label)
+
+def telaInfo():
+  line = Line(Point(38, 479), Point(587, 479)).draw(win).setWidth(2)
+  msg = Text(Point(102, 229),'SEU VOTO PARA').draw(win).setSize(11)
+  msg1 = Text(Point(88, 490),'Aperte a tecla:').draw(win).setSize(10)
+  msg2 = Text(Point(183, 520),'CORRIGE para REINICIAR este voto').draw(win).setSize(10)
 
 def nuloMsg():
-    return 0
+  telaInfo()
+  msg = Text(Point(179, 505),'CONFIRMA para CONFIRMAR este voto').draw(win).setSize(10)
+  msg1 = Text(Point(334, 443),'VOTO NULO').draw(win).setSize(28)
+  
+def brancoMsg():
+  telaInfo()
+  msg = Text(Point(179, 505),'CONFIRMA para CONFIRMAR este voto').draw(win).setSize(10)
+  msg1 = Text(Point(322, 360),'VOTO EM BRANCO').draw(win).setSize(27)
 
 def legendaMsg():
-    return 0
+  telaInfo()
+  msg = Text(Point(525, 508),'(voto de legenda)').draw(win).setSize(10)
 
 '''//////////MAIN/////////////////////////////////////////////////////////////////////////////////////////////////////////////'''
 candidatos_matrix = getCandidatos()
+cargo = 0
 while True:
-  voto += str(getKey(win.getMouse()))
+  label_cargo = cargoLabel(default, cargo)
+  num_slots = cargoNum(default[cargo][0])
+  voto += str(getNum(win.getMouse()))
+  print(voto)
   if len(voto) >= 2:
-    if searchCandidato(candidatos_matrix, voto) == False:
+    cand = searchCandidato(candidatos_matrix, voto)
+    print(cand)
+    if cand == False:
       nuloMsg()
+    else:
+      cargoLabel(candidatos_matrix, cand)
+      legendaMsg()
   if 'Corrige' in voto:
     voto = ''
-  
-  
-  
   
   
   

@@ -3,3 +3,11 @@ numero;cargo;partido;nome;votos
 9102;Deputada Federal;PEsp;Ginastica Artistica;0
 9103;Deputado Federal;PEsp;Boxe;0
 9104;Deputada Federal;PEsp;Halterofilismo;0
+91001;Deputado Estadual;PEsp;Atlestismo;0
+91002;Deputada Estadual;PEsp;Ginastica Artistica;0
+91003;Deputado Estadual;PEsp;Boxe;0
+91004;Deputada Estadual;PEsp;Halterofilismo;0
+911;Senador;PEsp;Atlestismo;0
+912;Senador;PEsp;Ginastica Artistica;0
+91;Governador;PEsp;Atlestismo;0
+91;Presidente;PEsp;Ginastica Artistica;0
