@@ -1,15 +1,3 @@
-'''
-CODIGO INCOMPLETO
-'''
-
-
-
-
-
-
-
-
-
 #coding=UTF-8
 from graphics import *
 from pygame import mixer
