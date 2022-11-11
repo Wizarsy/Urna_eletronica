@@ -1,13 +1,18 @@
 numero;cargo;partido;nome;votos
-9101;Deputado Federal;PEsp;Atlestismo;0
-9102;Deputada Federal;PEsp;Ginastica Artistica;0
-9103;Deputado Federal;PEsp;Boxe;0
-9104;Deputada Federal;PEsp;Halterofilismo;0
-91001;Deputado Estadual;PEsp;Atlestismo;0
-91002;Deputada Estadual;PEsp;Ginastica Artistica;0
-91003;Deputado Estadual;PEsp;Boxe;0
-91004;Deputada Estadual;PEsp;Halterofilismo;0
-911;Senador;PEsp;Atlestismo;0
-912;Senador;PEsp;Ginastica Artistica;0
-91;Governador;PEsp;Atlestismo;0
-91;Presidente;PEsp;Ginastica Artistica;0
+1022;Deputado Federal;REPUBLICANOS;TENENTE CORONEL ZUCCO;0
+3030;Deputado Federal;NOVO; MARCEL VAN HATTEM;0
+1307;Deputado Federal;PT;PAULO PIMENTA;0
+10022;Deputado Estadual;REPUBLICANOS;GUSTAVO VICTORINO;0
+50000;Deputada Estadual;PSOL;LUCIANA GENRO;0
+22222;Deputado Estadual;PL;RODRIGO LORENZONI;0
+100;Senador;REPUBLICANOS;HAMILTON MOURAO;0
+131;Senador;PT;OLIVIO DUTRA;0
+555;Senadora;PSD;ANA AMELIA LEMOS;0
+22;Governador;PL;ONYX LORENZONI;0
+45;Governador;PSDB;EDUARDO LEITE;0
+13;Governador;PT;EDEGAR PRETTO;0
+22;Presidente;PL;JAIR BOLSONARO;0
+13;Presidente;PT;LULA;0
+15;Presidente;MDB;SIMONE TEBET;0
+-;-;-;BRANCO;0
+-;-;-;NULO;0
