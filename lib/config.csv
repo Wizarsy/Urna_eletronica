@@ -1,0 +1,42 @@
+Deputado Federal;224;282
+4;114;333
+Partido:;69;428
+Número:;72;349
+Nome:;66;392
+_df.png;535;286
+-
+Deputado Estadual;224;282
+5;114;333
+Partido:;69;428
+Número:;72;349
+Nome:;66;392
+_de.png;535;286
+-
+Senador;238;254
+3;122;273
+Partido:;69;375
+Número:;72;289
+Nome:;66;321
+1° Suplente:;83;434
+2° Suplente:;83;454
+_sena.png;535;286
+_1ºsup.png;468;432
+_2ºsup.png;548;432
+-
+Governador;239;266
+2;129;301
+Partido:;69;428
+Número:;72;317
+Nome:;66;392
+Vice-Governador:;103;450
+_gov.png;535;286
+_vicegov.png;548;432
+-
+Presidente;239;266
+2;129;301
+Partido:;69;428
+Número:;72;349
+Nome:;66;392
+Vice-Presidente:;100;450
+_pre.png;535;286
+_vicepre.png;548;432

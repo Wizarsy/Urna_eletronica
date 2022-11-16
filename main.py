@@ -7,14 +7,13 @@ import time
 '''//////////GLOBAL///////////////////////////////////////////////////////////////////////////////////////////////////////////'''
 win = GraphWin('Urna Eletrônica', 950, 596)
 urna = Image(Point(475, 298), 'Python/Urna_eletronica/lib/urna_eletronica.png').draw(win)
-default = [[4, 'Deputado Federal'],[5, 'Deputado Estadual'], [3, 'Senador'], [2, 'Governador'], [2, 'Presidente']]
 mixer.init()
+now = datetime.datetime.now()
 draws = []
 tela = []
 box = []
-voto = ''
 
-'''//////////FUNCTIONS////////////////////////////////////////////////////////////////////////////////////////////////////////'''
+'''//////////FUNCTIONS////////////////////////////////////////////////////////////////////////////////////////////////////////'''  
 def confirmaSound():
   sound = mixer.Sound('Python/Urna_eletronica/lib/inter.wav')
   return sound.play()
@@ -24,27 +23,38 @@ def fimSound():
   return sound.play()
 
 def getCandidatos():
-  candidatos = open('Python/Urna_eletronica/lib/candidatos.csv', 'r')
-  raw_list = candidatos.read().split('\n')
+  candidatos = open('Python/Urna_eletronica/lib/candidatos.csv', mode = 'r', encoding = 'utf-8')
+  cand_list = candidatos.read().split('\n')
   candidatos.close()
-  cand_list = []
-  for candidatos in raw_list:
-    cand_list.append(candidatos.split(';'))
+  for candidatos in range(len(cand_list)):
+    cand_list[candidatos] = cand_list[candidatos].split(';')
   return cand_list
   
-def searchCandidato(matrix, voto, tam, cargo):
-  for linha in range(len(matrix)):
-    if voto in matrix[linha][0] and cargo[:2] in matrix[linha][1]:
-      if len(matrix[linha][0]) == tam:
-        return linha, matrix[linha][1]
-      elif len(matrix[linha][0]) != tam:
+def getConfig():
+  config = open('Python/Urna_eletronica/lib/config.csv', mode = 'r', encoding = 'utf-8')
+  config_list = config.read().split('\n-\n')
+  config.close()
+  for x in range(len(config_list)):
+    config_list[x] = config_list[x].split('\n')
+    for x1 in range(len(config_list[x])):
+      config_list[x][x1] = config_list[x][x1].split(';')
+  return config_list
+  
+def searchCandidato(voto, tam, cargo):
+  for linha in range(len(cand_matrix)):
+    if voto[:2] in cand_matrix[linha][0][:2] and cargo[:2] in cand_matrix[linha][1]:
+      if len(cand_matrix[linha][0]) == tam:
+        return linha, cand_matrix[linha][1]
+      elif len(cand_matrix[linha][0]) != tam:
         continue
       elif len(voto) == (tam // 2):
         return True, ''
   return False, ''
 
-def getKey(click):
-  if click.getX() in range(670, 722) and click.getY() in range(272, 312):
+def getKeys(click):
+  if click == None:
+    return
+  elif click.getX() in range(670, 722) and click.getY() in range(272, 312):
     num_down = Image(Point(695, 292),'Python/Urna_eletronica/lib/button/n1_down.png').draw(win)
     time.sleep(0.10)
     num_down.undraw()
@@ -110,216 +120,349 @@ def getKey(click):
     num_down.undraw()
     return 'Confirma'
 
-def cargoLabel(x, y, cargo):
-  cargo_label = Text(Point(x, y), f'{cargo}').draw(win)
+def cargoLabel(index):
+  cargo_label = Text(Point(config[index][0][1], config[index][0][2]), f'{config[index][0][0]}').draw(win)
   cargo_label.setSize(19)
   draws.append(cargo_label)
   
-def cargoNum(leng, initX, initX1, initY, initY1):
+def numSlots(index):
+  tam, initX, initY = int(config[index][1][0]), int(config[index][1][1]), int(config[index][1][2])
+  X1 = initX + 27
+  Y1 = initY + 33
   pontos = []
-  pontos.append((initY + initY1) / 2)
-  for i in range(leng):
-    cargo_num = Rectangle(Point(initX, initY), Point(initX1, initY1)).draw(win)
-    pontos.append((initX + initX1) / 2)
-    initX = initX1 + 2
-    initX1 += 29
+  pontos.append((initY + Y1) / 2)
+  for i in range(tam):
+    cargo_num = Rectangle(Point(initX, initY), Point(X1, Y1)).draw(win)
+    pontos.append((initX + X1) / 2)
+    initX = X1 + 2
+    X1 += 29
     box.append(cargo_num)
   return pontos
 
-def deputadoFederal(matrix, x):
-  msgNum = Text(Point(71, 349), 'Número: ').draw(win)
-  msgNome = Text(Point(140, 380),f'Nome: \t{matrix[x][1]}').draw(win)
-  msgPartido = Text(Point(140, 405),f'Partido: \t{matrix[x][2]}').draw(win)
-  msgImage = Image(Point(500, 220), 'Python/Urna_eletronica/lib/13.png').draw(win)
-  tela.append(msgNum), tela.append(msgNome), tela.append(msgPartido), tela.append(msgImage)
-  
-def deputadoEstadual(matrix, x):
-  msgNum = Text(Point(40, 349), 'Número').draw(win)
-  msgNome = Text(Point(40, 380), matrix[x][1]).draw(win)
-  msgPartido = Text(Point(40, 405), matrix[x][2]).draw(win)
-  msgImage = Image(Point(587, 220), 'Python/Urna_eletronica/lib/13.png').draw(win)
-  tela.append(msgNum), tela.append(msgNome), tela.append(msgPartido), tela.append(msgImage)
-  
-def senador(matrix, x):
-  msgNum = Text(Point(40, 349), 'Número').draw(win)
-  msgNome = Text(Point(40, 380), matrix[x][1]).draw(win)
-  msgPartido = Text(Point(40, 405), matrix[x][2]).draw(win)
-  msgImage = Image(Point(587, 220), f'Python/Urna_eletronica/lib/{matrix[x][0]}.png').draw(win)
-  tela.append(msgNum), tela.append(msgNome), tela.append(msgPartido), tela.append(msgImage)
-    
-def governador(matrix, x):
-  msgNum = Text(Point(71, 349), 'Número').draw(win)
-  msgNome = Text(Point(40, 380), matrix[x][1]).draw(win)
-  msgPartido = Text(Point(40, 405), matrix[x][2]).draw(win)
-  msgImage = Image(Point(587, 220), 'Python/Urna_eletronica/lib/13.png').draw(win)
-  tela.append(msgNum), tela.append(msgNome), tela.append(msgPartido), tela.append(msgImage)
-  
-def presidente(matrix, x):
-  msgNum = Text(Point(40, 349), 'Número').draw(win)
-  msgNome = Text(Point(40, 380), matrix[x][1]).draw(win)
-  msgPartido = Text(Point(40, 405), matrix[x][2]).draw(win)
-  msgImage = Image(Point(587, 220), 'Python/Urna_eletronica/lib/13.png').draw(win)
-  tela.append(msgNum), tela.append(msgNome), tela.append(msgPartido), tela.append(msgImage)
-
 def telaInfo():
-  line = Line(Point(38, 479), Point(587, 479)).draw(win)
-  msg = Text(Point(102, 229),'SEU VOTO PARA').draw(win)
-  msg1 = Text(Point(88, 490),'Aperte a tecla:').draw(win)
-  msg2 = Text(Point(183, 520),'CORRIGE para REINICIAR este voto').draw(win)
-  line.setWidth(2)
-  msg.setSize(11)
-  msg1.setSize(10)
-  msg2.setSize(10)
-  tela.append(line), tela.append(msg), tela.append(msg1), tela.append(msg2)
+  msg_voto = Text(Point(102, 229),'SEU VOTO PARA').draw(win)
+  msg_tecla = Text(Point(88, 490),'Aperte a tecla:').draw(win)
+  msg_corrige = Text(Point(183, 520),'CORRIGE para REINICIAR este voto').draw(win)
+  msg_voto.setSize(11)
+  msg_tecla.setSize(10)
+  msg_corrige.setSize(10)
+  tela.append(msg_voto), tela.append(msg_tecla), tela.append(msg_corrige)
 
 def nuloMsg():
   telaInfo()
-  msg = Text(Point(179, 505),'CONFIRMA para CONFIRMAR este voto').draw(win)
-  msg1 = Text(Point(334, 443),'VOTO NULO').draw(win)
-  msg.setSize(10)
-  msg1.setSize(28)
-  tela.append(msg), tela.append(msg1)
+  line = Line(Point(38, 479), Point(587, 479)).draw(win)
+  line.setWidth(2)
+  msg_confirma = Text(Point(179, 505),'CONFIRMA para CONFIRMAR este voto').draw(win)
+  msg_nulo = Text(Point(334, 443),'VOTO NULO').draw(win)
+  msg_nome = Text(Point(int(config[cargo][4][1]) + 68 , config[cargo][4][2]), 'NÚMERO ERRADO').draw(win)
+  msg_nome.setSize(16)
+  msg_confirma.setSize(10)
+  msg_nulo.setSize(28)
+  tela.append(line), tela.append(msg_confirma), tela.append(msg_nome), tela.append(msg_nulo)
   
 def brancoMsg():
   telaInfo()
-  msg = Text(Point(179, 505),'CONFIRMA para CONFIRMAR este voto').draw(win)
-  msg1 = Text(Point(322, 360),'VOTO EM BRANCO').draw(win)
-  msg.setSize(10)
-  msg1.setSize(27)
-  tela.append(msg), tela.append(msg1)
+  line = Line(Point(38, 479), Point(587, 479)).draw(win)
+  line.setWidth(2)
+  msg_confirma = Text(Point(179, 505),'CONFIRMA para CONFIRMAR este voto').draw(win)
+  msg_branco = Text(Point(322, 360),'VOTO EM BRANCO').draw(win)
+  msg_confirma.setSize(10)
+  msg_branco.setSize(27)
+  tela.append(line), tela.append(msg_confirma), tela.append(msg_branco)
 
 def legendaMsg():
   telaInfo()
-  msg = Text(Point(179, 505),'CONFIRMA para PROSSEGUIR').draw(win)
-  msg1 = Text(Point(525, 508),'(voto de legenda)').draw(win)
-  msg.setSize(10)
-  msg1.setSize(10)
-  tela.append(msg), tela.append(msg1)
+  line = Line(Point(38, 479), Point(587, 479)).draw(win)
+  line.setWidth(2)
+  msg_confirma = Text(Point(179, 505),'CONFIRMA para PROSSEGUIR').draw(win)
+  msg_legenda = Text(Point(525, 508),'(voto de legenda)').draw(win)
+  msg_partido = Text(Point(config[cargo][2][1], config[cargo][2][2]), config[cargo][2][0]).draw(win)
+  msg_partido_nome = Text(Point(int(config[cargo][2][1]) + (3.5 * len(cand_matrix[cand][2]) + 50), config[cargo][2][2]), cand_matrix[cand][2]).draw(win)
+  msg_confirma.setSize(10)
+  msg_legenda.setSize(10)
+  tela.append(line), tela.append(msg_confirma), tela.append(msg_legenda), tela.append(msg_partido), tela.append(msg_partido_nome)
 
-def writeNum(point, num, l):
-  text = Text(Point(point[l], point[0]), num).draw(win)
-  draws.append(text)
+def writeNum(point, num, tam):
+  Num = Text(Point(point[tam], point[0]), num).draw(win)
+  Num.setSize(20)
+  draws.append(Num)
   
-def eraseDraws(draws):
-  for i in draws:
-    i.undraw()
-  draws.clear()
+def eraseDraws(**draws):
+  for dic in draws.values():
+    for x in dic:
+      x.undraw()
+    dic.clear()
 
-def confirmaVoto(matrix, cand):
-  candidatos = open('Python/Urna_eletronica/lib/candidatos.csv', 'w')
-  votoM = int(matrix[cand][4]) + 1
-  matrix[cand][4] = str(votoM)
-  for linha in range(len(matrix)):
-    for coluna in range(len(matrix[linha])):
-      candidatos.write(matrix[linha][coluna])
-      if coluna<len(matrix[linha]) - 1:
+def confirmaVoto(cand):
+  candidatos = open('Python/Urna_eletronica/lib/candidatos.csv', mode = 'w', encoding = 'utf-8')
+  votoM = int(cand_matrix[cand][4]) + 1
+  cand_matrix[cand][4] = str(votoM)
+  for linha in range(len(cand_matrix)):
+    for coluna in range(len(cand_matrix[linha])):
+      candidatos.write(cand_matrix[linha][coluna])
+      if coluna<len(cand_matrix[linha]) - 1:
         candidatos.write(';')
-    if linha<len(matrix) - 1:
+    if linha<len(cand_matrix) - 1:
       candidatos.write('\n')
   candidatos.close()
   
+def candInfo(index, cand, voto):
+  last, n = None, 0
+  for x in range(len(config[index])):
+    for x1 in range(len(config[index][x])):
+      if '_' in config[index][x][x1] and last == None:
+        last = x
+        break
+  temp = config[index][2:last]
+  for i in range(len(temp)):
+    info = Text(Point(temp[i][1], temp[i][2]), temp[i][0])
+    info.draw(win)
+    draws.append(info)   
+  msg_partido_nome = Text(Point(int(config[cargo][2][1]) + (3.5 * len(cand_matrix[cand][2]) + 50), config[cargo][2][2]), cand_matrix[cand][2]).draw(win)
+  draws.append(msg_partido_nome)
+  while cand_matrix[cand][0] == cand_matrix[cand + n][0]:
+    msg_nome = Text(Point(int(config[cargo][4 + n][1]) + (3.5 * len(cand_matrix[cand + n][3]) + 85), config[cargo][4 + n][2]),cand_matrix[cand + n][3]).draw(win)
+    n += 1
+    draws.append(msg_nome)
+  temp = config[index][last:]
+  for i in range(len(temp)):
+    img = Image(Point(temp[i][1], temp[i][2]), f'Python/Urna_eletronica/lib/cand_imagens/{voto + temp[i][0]}').draw(win)
+    draws.append(img)
+  return n 
+
+def getdayweek():
+  return datetime.datetime.now().strftime('%a')
+
+def getday():
+  return datetime.datetime.now().strftime('%d')
+
+def getmonth():
+  return datetime.datetime.now().strftime('%m')
+
+def getyear():
+  return datetime.datetime.now().strftime('%Y')
+
+def gethour():
+  return datetime.datetime.now().strftime('%H')
+
+def getminute():
+  return datetime.datetime.now().strftime('%M')
+
+def getsecond():
+  return datetime.datetime.now().strftime('%S')
+
+def getdate():
+  return f'{getdayweek()}  {getday()}/{getmonth()}/{getyear()}  {gethour()}:{getminute()}:{getsecond()}'
+
 '''//////////MAIN/////////////////////////////////////////////////////////////////////////////////////////////////////////////'''
-candidatos_matrix = getCandidatos()
-cargo = 3
-secao = 0
+config = getConfig()
+cand_matrix = getCandidatos()
+status = ['legenda', 'branco', 'nulo']
+click = ''
+voto = ''
+st = ''
+cargo = 6
+seções = 0
 res = 1
+
 while res == 1:
+  while not 'Confirma' in str(click):
+    msg_hora = Text(Point(134, 226), f'{getdate()}').draw(win)
+    msg_inicio = Text(Point(310, 390 ), 'INÍCIO DA VOTAÇÃO\n\nIDENTIFIQUE O ELEITOR').draw(win)
+    msg_inicio.setSize(18)
+    time.sleep(1)
+    msg_hora.undraw()
+    msg_inicio.undraw()
+    click = getKeys(win.checkMouse())
   while cargo < 5:
     if len(draws) == 0:
-      if cargo == 0:
-        label_cargo = cargoLabel(224, 282, 'Deputado Federal')
-        slots = cargoNum(4, 114, 141, 333, 365)
-        tam = 4
-      elif cargo == 1:
-        label_cargo = cargoLabel(224, 282, 'Deputado Estadual')
-        slots = cargoNum(5, 114, 141, 333, 365)
-        tam = 5
-      elif cargo == 2:
-        label_cargo = cargoLabel(238, 254, 'Senador')
-        slots = cargoNum(3, 122, 149, 273, 305)
-        tam = 3
-      elif cargo == 3:
-        label_cargo = cargoLabel(239, 266,'Governador')
-        slots = cargoNum(2, 129, 156, 301, 333)
-        tam =  2
-      elif cargo == 4:
-        label_cargo = cargoLabel(239, 266, 'Presidente')
-        slots = cargoNum(2, 129, 156, 301, 333)
-        tam = 2
-    click = getKey(win.getMouse())
-    if len(voto) < tam:
+      cargoLabel(cargo)
+      slots = numSlots(cargo)
+      tam = int(config[cargo][1][0])
+    click = getKeys(win.getMouse())
+    if len(voto) < tam and st != 'branco':
       if click in range(10):
         voto += str(click)
         writeNum(slots, str(click), len(voto))
-      if len(voto) >= (tam // 2):
-        cand, label = searchCandidato(candidatos_matrix, voto, tam, draws[0].getText())
-        if cand == False and voto != 'nulo':
-          eraseDraws(tela)
-          nuloMsg()
-          voto = 'nulo'
-          cand = -1
-        else:
-          if draws[0].getText() != label:
-            draws[0].setText(label)
-          eraseDraws(tela)
-          legendaMsg()
-        if len(voto) == tam and voto != 'nulo':
-          if cargo == 0:
-            deputadoFederal(candidatos_matrix, cand)
-          elif cargo == 1:
-            deputadoEstadual(candidatos_matrix, cand)
-          elif cargo == 2:
-            senador(candidatos_matrix, cand)
-          elif cargo == 3:
-            governador(candidatos_matrix, cand)
-          elif cargo == 4:
-            presidente(candidatos_matrix, cand)
+        if len(voto) >= (tam // 2):
+          cand, label = searchCandidato(voto, tam, draws[0].getText())
+          if cand == False:
+            eraseDraws(a = tela)
+            nuloMsg()
+            cand = -2
+            st = 'nulo'
+          else:
+            if draws[0].getText() != label:
+              draws[0].setText(label)
+            if cargo < 2 and len(tela) <= 1:
+              eraseDraws(a = tela)
+              legendaMsg()
+              st = 'legenda'
+              cand = -1       
+        if len(voto) == tam and st != 'nulo':
+          if voto == cand_matrix[cand][0]:
+            eraseDraws(a = tela)
+            n_images = candInfo(cargo, cand, voto)
+            if n_images == 1:
+              line = Line(Point(38, 479), Point(587, 479)).draw(win)
+            if n_images == 2:
+              line = Line(Point(38, 479), Point(508, 479)).draw(win)
+            elif n_images >= 3:
+              line = Line(Point(38, 479), Point(428, 479)).draw(win)
+            line.setWidth(2)
+            msg_voto = Text(Point(102, 229),'SEU VOTO PARA').draw(win)
+            msg_voto.setSize(11)
+            msg_confira = Text(Point(300, 505),'CONFIRA O SEU VOTO').draw(win)
+            msg_confira.setSize(20)
+            time.sleep(1)
+            msg_confira.undraw()
+            msg_tecla = Text(Point(88, 490),'Aperte a tecla:').draw(win)
+            msg_tecla.setSize(10)
+            msg_corrige = Text(Point(183, 520),'CORRIGE para REINICIAR este voto').draw(win)
+            msg_corrige.setSize(10)
+            msg_confirma = Text(Point(179, 505),'CONFIRMA para CONFIRMAR este voto').draw(win)
+            msg_confirma.setSize(10)
+            tela.append(line), tela.append(msg_confirma), tela.append(msg_voto), tela.append(msg_tecla), tela.append(msg_corrige)
+          else:
+            cand = -1
+            line = Line(Point(38, 479), Point(587, 479)).draw(win)
+            line.setWidth(2)
+            msg_num = Text(Point(config[cargo][3][1], config[cargo][3][2]), config[cargo][3][0]).draw(win)
+            msg_nome = Text(Point(int(config[cargo][4][1]) + 104, config[cargo][4][2]), 'CANDIDATO INEXISTENTE').draw(win)
+            msg_nome.setSize(16)
+            msg_legenda = Text(Point(300, 462),'VOTO DE LEGENDA').draw(win)
+            msg_legenda.setSize(25)
+            tela.append(line), draws.append(msg_num), draws.append(msg_nome), draws.append(msg_legenda)
       if 'Corrige' in str(click):
+        eraseDraws(a = draws, b = tela)
         voto = ''
-        eraseDraws(draws)
-        eraseDraws(tela)
+        st = ''
       elif 'Branco' in str(click) and voto == '':
-        cand = -2
-        voto = 'Branco'
-        eraseDraws(tela)
-        eraseDraws(box)
+        eraseDraws(a = tela, b = box)
         brancoMsg()
-    if len(voto) >= tam:
+        cand = -3
+        st = 'branco'       
+    if len(voto) >= tam or st in status:
       if 'Corrige' in str(click):
+        eraseDraws(a = draws, b = tela)
         voto = ''
-        eraseDraws(draws)
-        eraseDraws(tela)
+        st = '' 
       elif 'Confirma' in str(click):
-        confirmaVoto(candidatos_matrix, cand)
+        confirmaVoto(cand)
         confirmaSound()
-        eraseDraws(draws)
-        eraseDraws(tela)
-        eraseDraws(box)
+        eraseDraws(a = draws, b = tela, c = box)
         cargo += 1
         voto = ''
-  eraseDraws(draws)
-  eraseDraws(tela)
-  eraseDraws(box)
+        st = ''
+  eraseDraws(a = draws, b = tela, c = box)
+  load = 0
+  while load <= 460:
+    load_bar = Rectangle(Point(80, 375), Point(80 + load, 390)).draw(win)
+    load_bar.setFill('green')       
+    msg_gravando = Text(Point(320, 410), 'Gravando').draw(win)
+    msg_gravando.setStyle('bold')
+    msg_gravando.setSize(15)
+    time.sleep(0.05)
+    load_bar.undraw()
+    msg_gravando.undraw()
+    load += 10
+  seções += 1
+  msg_Fim = Text(Point(320, 360), 'FIM').draw(win)
+  msg_Fim.setSize(35)
+  msg_bateria = Image(Point(559, 231), 'Python/Urna_eletronica/lib/bateria.png').draw(win)
   fimSound()
-  Fim = Text(Point(320, 360), 'FIM').draw(win)
-  Fim.setSize(35)
   time.sleep(1)
-  Fim.undraw()
-  secao += 1
-  fimTela = Text(Point(320, 360), 'Pressione CONFIRMA para rodar novamente ou CORRIGE para contabilizar os votos').draw(win)
-  fimTela.setSize(10)
-  click = getKey(win.getMouse())
-  fimTela.undraw()
+  msg_Fim.undraw()
+  msg_bateria.undraw()
+  click = ''
+  while not 'Confirma' in str(click):
+    if 'Corrige' in str(click):
+      break
+    fimTela = Text(Point(320, 360), 'Pressione CONFIRMA para rodar novamente\n\nou CORRIGE para contabilizar os votos').draw(win)
+    fimTela.setSize(18)
+    msg_hora = Text(Point(134, 226), f'{getdate()}').draw(win)
+    time.sleep(1)
+    fimTela.undraw()
+    msg_hora.undraw()
+    click = getKeys(win.checkMouse())
   if 'Confirma' in str(click):
-    res = 1
     cargo = 0
-  else:
+    res = 1
+  if 'Corrige' in str(click):
     res = 0
-    candidatos_matrix = getCandidatos()[1:]
-    x = 320
-    y = 250
-    for c in range(len(candidatos_matrix)):
-      v = Text(Point(x, y), f'{candidatos_matrix[c][3]} \t {candidatos_matrix[c][4]} Votos').draw(win)
-      v.setSize(8)
-      y += 15
-    win.getMouse()
+    break
+
+cand_cor ={
+  'REPUBLICANOS' : 'blue3',
+  'NOVO' : 'orange',
+  'PT' : 'red',
+  'PL' : 'blue1',
+  'PSD' : 'blue2',
+  'PSOL' : 'yellow1',
+  'PSDB' : 'blue',
+  'MDB' : 'green',
+  '' : 'white'
+}
+graph_cand = 0
+click = ''
+config_linha = 0
+
+cand_matrix = cand_matrix[1:]
+linex = Line(Point(79, 480), Point(541, 480)).draw(win)
+liney = Line(Point(79, 480), Point(79, 260)).draw(win)
+graphX_label = Text(Point(linex.getP2().getX() + 20, 480), 'Votos').draw(win)
+graphX_label.setSize(8)
+graphY_label = Text(Point(79, liney.getP2().getY() - 20), 'Seções').draw(win)
+graphY_label.setSize(8)
+tela.append(linex), tela.append(liney), tela.append(graphX_label), tela.append(graphY_label)
+liney_points = (liney.getP1().getY() - liney.getP2().getY()) / seções
+graphY = liney_points
+linex_points = (linex.getP1().getX() + linex.getP2().getX()) / 3
+graphX = 0
+
+for seção in range(1, (seções + 1)):
+  graph_seções = Text(Point(60, 480 - graphY), seção).draw(win)
+  tela.append(graph_seções)
+  graphY += liney_points
+
+for linha in range(len(cand_matrix)):
+  if cand_matrix[linha][2]== '-':
+    continue
+  if graph_cand == 0:
+    try:
+      graph_label = Text(Point(320, 231), config[config_linha][0][0]).draw(win)
+      draws.append(graph_label)
+    except:
+      pass
+  graph_result = Text(Point(110 + graphX, 500), f'{cand_matrix[linha][3]}').draw(win)
+  graph_result.setSize(8)
+  graph_votos = Text(Point(110 + graphX, 520), f'{cand_matrix[linha][4]} votos').draw(win)
+  graph_votos.setSize(8)
+  graph_bar = Rectangle(Point(105 + graphX, 480), Point(120 + graphX, 480 - (liney_points * int(cand_matrix[linha][4])))).draw(win)
+  graph_bar.setFill(cand_cor[cand_matrix[linha][2]])
+  percent = (int(cand_matrix[linha][4]) * 100) / seções
+  graph_percent = Text(Point(110 + graphX, graph_bar.getP2().getY() - 10), f'{percent}%').draw(win)
+  graph_percent.setSize(8)
+  draws.append(graph_result), draws.append(graph_bar), draws.append(graph_votos), draws.append(graph_percent)
+  graphX += linex_points
+  graph_cand += 1
+  if graph_cand == 3:
+    while not 'Confirma' in str(click):
+      click = getKeys(win.getMouse())
+    eraseDraws(a = draws)
+    config_linha += 1
+    graph_cand = 0
+    graphX = 0
+    click = ''
+eraseDraws(a = draws, b = tela)
+click = ''
+while not 'Confirma' in str(click):
+  msg_final = Text(Point(320, 360), 'Pressione CONFIRMA para encerrar o programa').draw(win)
+  msg_final.setSize(16)
+  msg_hora = Text(Point(134, 226), f'{getdate()}').draw(win)
+  time.sleep(1)
+  msg_final.undraw()
+  msg_hora.undraw()
+  click = getKeys(win.checkMouse())
+urna.undraw()
+win.close()
