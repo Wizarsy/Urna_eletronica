@@ -266,14 +266,14 @@ seções = 0
 res = 1
 
 while res == 1:
+  msg_inicio = Text(Point(310, 390 ), 'INÍCIO DA VOTAÇÃO\n\nIDENTIFIQUE O ELEITOR').draw(win)
+  msg_inicio.setSize(18)
   while not 'Confirma' in str(click):
-    msg_hora = Text(Point(134, 226), f'{getdate()}').draw(win)
-    msg_inicio = Text(Point(310, 390 ), 'INÍCIO DA VOTAÇÃO\n\nIDENTIFIQUE O ELEITOR').draw(win)
-    msg_inicio.setSize(18)
-    time.sleep(1)
+    msg_hora = Text(Point(138, 226), f'{getdate()}').draw(win)
+    time.sleep(0.5)
     msg_hora.undraw()
-    msg_inicio.undraw()
     click = getKeys(win.checkMouse())
+  msg_inicio.undraw()
   while cargo < 5:
     if len(draws) == 0:
       cargoLabel(cargo)
@@ -356,16 +356,16 @@ while res == 1:
         st = ''
   eraseDraws(a = draws, b = tela, c = box)
   load = 0
+  msg_gravando = Text(Point(320, 410), 'Gravando').draw(win)
+  msg_gravando.setStyle('bold')
+  msg_gravando.setSize(15)
   while load <= 460:
     load_bar = Rectangle(Point(80, 375), Point(80 + load, 390)).draw(win)
     load_bar.setFill('green')       
-    msg_gravando = Text(Point(320, 410), 'Gravando').draw(win)
-    msg_gravando.setStyle('bold')
-    msg_gravando.setSize(15)
-    time.sleep(0.05)
+    time.sleep(0.030)
     load_bar.undraw()
-    msg_gravando.undraw()
     load += 10
+  msg_gravando.undraw()
   seções += 1
   msg_Fim = Text(Point(320, 360), 'FIM').draw(win)
   msg_Fim.setSize(35)
@@ -375,16 +375,14 @@ while res == 1:
   msg_Fim.undraw()
   msg_bateria.undraw()
   click = ''
-  while not 'Confirma' in str(click):
-    if 'Corrige' in str(click):
-      break
-    fimTela = Text(Point(320, 360), 'Pressione CONFIRMA para rodar novamente\n\nou CORRIGE para contabilizar os votos').draw(win)
-    fimTela.setSize(18)
+  fimTela = Text(Point(320, 360), 'Pressione CONFIRMA para rodar novamente\n\nou CORRIGE para contabilizar os votos').draw(win)
+  fimTela.setSize(18)
+  while not 'Confirma' in str(click) and not 'Corrige' in str(click):
     msg_hora = Text(Point(134, 226), f'{getdate()}').draw(win)
-    time.sleep(1)
-    fimTela.undraw()
+    time.sleep(0.5)
     msg_hora.undraw()
     click = getKeys(win.checkMouse())
+  fimTela.undraw()
   if 'Confirma' in str(click):
     cargo = 0
     res = 1
@@ -401,12 +399,12 @@ cand_cor ={
   'PSOL' : 'yellow1',
   'PSDB' : 'blue',
   'MDB' : 'green',
-  '' : 'white'
+  '' : 'black'
 }
+
 graph_cand = 0
 click = ''
 config_linha = 0
-
 cand_matrix = cand_matrix[1:]
 linex = Line(Point(79, 480), Point(541, 480)).draw(win)
 liney = Line(Point(79, 480), Point(79, 260)).draw(win)
@@ -440,6 +438,10 @@ for linha in range(len(cand_matrix)):
   graph_votos.setSize(8)
   graph_bar = Rectangle(Point(105 + graphX, 480), Point(120 + graphX, 480 - (liney_points * int(cand_matrix[linha][4])))).draw(win)
   graph_bar.setFill(cand_cor[cand_matrix[linha][2]])
+  if graph_bar.getP2().getY() < liney.getP2().getY():
+    graph_bar.undraw()
+    graph_bar = Rectangle(Point(105 + graphX, 480), Point(120 + graphX, liney.getP2().getY())).draw(win)
+    graph_bar.setFill(cand_cor[cand_matrix[linha][2]])
   percent = (int(cand_matrix[linha][4]) * 100) / seções
   graph_percent = Text(Point(110 + graphX, graph_bar.getP2().getY() - 10), f'{percent}%').draw(win)
   graph_percent.setSize(8)
