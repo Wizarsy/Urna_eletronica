@@ -261,7 +261,7 @@ status = ['legenda', 'branco', 'nulo']
 click = ''
 voto = ''
 st = ''
-cargo = 6
+cargo = 0
 seções = 0
 res = 1
 
