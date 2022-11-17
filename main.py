@@ -31,7 +31,7 @@ def getCandidatos():
   return cand_list
   
 def getConfig():
-  config = open('Python/Urna_eletronica/lib/config.csv', mode = 'r', encoding = 'utf-8')
+  config = open('Python/Urna_eletronica/lib/config.txt', mode = 'r', encoding = 'utf-8')
   config_list = config.read().split('\n-\n')
   config.close()
   for x in range(len(config_list)):
